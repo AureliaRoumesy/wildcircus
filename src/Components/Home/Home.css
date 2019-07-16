@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Fredericka+the+Great&display=swap');
+
+.home {
+  text-align: center;
+}
+
+.home img{
+  width: 50vw;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5vh;
+}

@@ -1,0 +1,20 @@
+.ant-btn-primary {
+  color: #fff;
+  background-color: darkred!important;
+  border-color: darkred!important;
+}
+
+.ant-input-affix-wrapper:hover .ant-input:not(.ant-input-disabled){
+  border-color: darkred!important;
+}
+.ant-input:focus{
+  border-color: darkred!important;
+  box-shadow: 0 0 0 2px rgb(241, 191, 191)!important;
+}
+.ant-input:hover{
+  border-color: darkred!important;
+}
+.ant-btn-primary[disabled]{
+  background-color: lightgrey!important;
+  border-color: lightgrey!important;
+}

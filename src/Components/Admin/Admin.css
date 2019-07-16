@@ -1,0 +1,29 @@
+.admin button{
+  float: right;
+}
+.ant-calendar-ok-btn{
+  color: #fff;
+  background-color: darkred!important;
+  border-color: darkred!important;
+}
+.ant-calendar-time-picker-btn{
+  color: darkred!important;
+}
+.ant-calendar-time-picker-btn:hover{
+  color: rgb(240, 66, 66)!important;
+}
+.ant-select-dropdown .ant-select-dropdown-menu-item-active {
+  background-color: rgb(211, 58, 58)!important;
+  color: white!important;
+}
+
+.ant-select-auto-complete.ant-select .ant-input:focus, .ant-select-auto-complete.ant-select .ant-input:hover{
+  border-color: darkred!important;
+}
+.ant-select-selection:hover{
+  border-color: darkred!important;
+}
+.ant-select-open .ant-select-focused .ant-select-enabled, .ant-select-selection:focus, .ant-select-selection:active{
+  border-color: darkred!important;
+  box-shadow: 0 0 0 2px rgb(241, 191, 191)!important;
+}

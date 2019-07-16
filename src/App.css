@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css?family=Fredericka+the+Great&display=swap');
+
+.ant-layout-sider-children{
+  background-color: darkred;
+}
+.ant-menu{
+  background-color: darkred!important;
+}
+.ant-menu-item-selected{
+  background-color: rgb(211, 58, 58)!important;
+}
+.ant-menu-item{
+  color: white!important;
+}
+.ant-menu-item:hover{
+  background-color: rgb(165, 3, 3)!important;
+}
+.ant-menu-item-selected::after{
+  border-right: 3px solid rgb(206, 19, 19)!important;
+}
+a, a:hover{
+  color: white!important;
+}
+.ant-layout-sider-zero-width-trigger-left{
+  background-color: darkred!important;
+  color: white!important;
+}
+h1{
+  font-size: 3em;
+  font-weight: 500;
+  font-family: 'Fredericka the Great', cursive;
+  color: #ae370e!important;
+  text-align: center;
+}
