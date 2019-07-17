@@ -84,8 +84,36 @@ api.get('/api/artists', (req, res) => {
       bio: artist.description_artist,
       speciality: artist.speciality_artist,
     }))
+    console.log(data)
     if (err) throw err;
     res.json(data);
+  });
+});
+
+api.get('/api/events', (req, res) => {
+  connection.query('SELECT events.date_event, events.capacity, events.address_event, events.description_event, events.name_event, event_artists.event_id, event_artists.artist_id FROM event_artists LEFT JOIN events ON events.id_event = event_artists.event_id WHERE events.date_event >= CURDATE() ORDER BY events.date_event ASC',
+  (err, result1) => {
+    if (err) {
+      console.log(err)
+    } else {
+      connection.query('SELECT * FROM artists', (err, result) => {
+        const data = result.map((artist, index) => ({
+          id: artist.id_artist,
+          firstname: artist.firstname_artist,
+          lastname: artist.lastname_artist,
+          speciality: artist.speciality_artist,
+        }))
+        if (err) {
+          console.log(err)
+        } else {
+          connection.query('SELECT sum(quantity), event_id from registrations group by event_id', (err, count) => {
+            console.log(data)
+            if (err) throw err;
+            res.json([result1, data, count]);
+          });
+        }
+      });
+    }
   });
 });
 
@@ -116,9 +144,9 @@ api.post('/api/event/', verifyToken, (req, res) => {
                   connection.query(`INSERT INTO event_artists (artist_id, event_id) VALUES (${parseInt(values.artistsSelected[i].id, 10)}, ${parseInt(result[0].id_event, 10)})`,
                    (err, result) => {
                     if (err) throw err;
-                    res.send(result);
                   })
                 }
+                res.sendStatus(200);
               }
             }) 
           }
@@ -134,10 +162,9 @@ api.post('/api/artist/', verifyToken, (req, res) => {
       res.sendStatus(403);
     } else {
       const values = req.body;
-      console.log(values)
-
-      connection.query(`INSERT INTO artists (firstname_artist, lastname_artist, picture_artist, description_artist, speciality_artist) VALUES ('${values.firstnameArtist}', '${values.lastnameArtist}', '${values.pictureArtist}', '${values.bioArtist}', '${values.specialityArtist}')`,
+      connection.query(`INSERT INTO artists (firstname_artist, lastname_artist, picture_artist, description_artist, speciality_artist) VALUES ('${values.firstname}', '${values.lastname}', '${values.picture}', "${values.bio}", '${values.speciality}')`,
         (err, results) => {
+          console.log(results);
           if (err) {
             console.log(err)
             res.status(500).send("Erreur lors de l'enregistrement d'un artiste.");
@@ -150,6 +177,81 @@ api.post('/api/artist/', verifyToken, (req, res) => {
         })
     }
   });
+});
+
+api.post('/api/registration/', verifyToken, (req, res) => {
+  jwt.verify(req.token, publicKEY, verifyOptions, (err, authData) => {
+    if (err) {
+      console.log(err)
+      res.sendStatus(403);
+    } else {
+      const values = req.body;
+      console.log(values)
+      connection.query(`INSERT INTO registrations (firstname_registration, lastname_registration, quantity, event_id) VALUES ('${values.firstname}', '${values.lastname}', '${values.places}', ${parseInt(values.openRegistration, 10)})`,
+        (err, results) => {
+          console.log(results);
+          if (err) {
+            console.log(err)
+            res.status(500).send("Erreur lors de l'enregistrement d'un artiste.");
+          } else {
+            res.sendStatus(200)
+          }
+        })
+    }
+  });
+});
+
+api.put('/api/artist/:id', verifyToken, (req, res) => {
+  jwt.verify(req.token, publicKEY, verifyOptions, (err, authData) => {
+    if (err) {
+      console.log(err)
+      res.sendStatus(403);
+    } else {
+      const idArtist = req.params.id;
+      console.log(idArtist)
+      const values = req.body;
+      console.log(values)
+      const data = {
+        firstname_artist: values.firstname,
+        lastname_artist: values.lastname,
+        speciality_artist: values.speciality,
+        description_artist: values.bio,
+        picture_artist: values.picture,
+      }
+      if (idArtist) {
+        connection.query('UPDATE artists SET ? WHERE id_artist = ?', [data, idArtist], (err, result) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send("Erreur lors de la modification de l'artiste");
+          } else {
+            res.sendStatus(200);
+          }
+        });
+      }
+    }
+  })
+});
+
+api.delete('/api/artist/:id', verifyToken, (req, res) => {
+  jwt.verify(req.token, publicKEY, verifyOptions, (err, authData) => {
+    if (err) {
+      console.log(err)
+      res.sendStatus(403);
+    } else {
+      const idArtist = req.params.id;
+      connection.query(`DELETE FROM event_artists WHERE artist_id = ${idArtist}`, (err, result) => {
+        if (err) {
+          console.log(err)
+          res.sendStatus(403);
+        } else {
+          connection.query('DELETE FROM artists WHERE id_artist = ?', [idArtist], err => {
+            if (err) throw err;
+            res.json();
+          });
+        }
+      })
+    }
+  })
 });
 
 api.listen(8000, 'localhost', (err) => {
